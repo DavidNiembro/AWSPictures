@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Gallery;
 use Illuminate\Http\Request;
+use Auth;
 
 class GalleryController extends Controller
 {
@@ -24,7 +25,7 @@ class GalleryController extends Controller
      */
     public function create()
     {
-        //
+        return view('galleries.create');
     }
 
     /**
@@ -35,7 +36,11 @@ class GalleryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $gallery = new Gallery($request->all());
+        $gallery->author_id = Auth::id();
+        $gallery->save();
+
+        return redirect()->route('galleries.index');
     }
 
     /**
