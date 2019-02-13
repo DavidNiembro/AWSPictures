@@ -13,9 +13,9 @@ class PictureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Gallery $gallery)
     {
-        //
+        return redirect()->route('galleries.show', $gallery);
     }
 
     /**
