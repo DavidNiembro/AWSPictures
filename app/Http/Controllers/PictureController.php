@@ -6,7 +6,6 @@ use App\Picture;
 use Illuminate\Http\Request;
 use App\Gallery;
 use Illuminate\Support\Str;
-
 class PictureController extends Controller
 {
     /**
@@ -26,7 +25,36 @@ class PictureController extends Controller
      */
     public function create(Gallery $gallery)
     {
-        return view('pictures.create', compact('gallery'));
+        $client = new \Aws\S3\S3Client([
+            'version' => 'latest',
+            'region' => env('AWS_DEFAULT_REGION'),
+        ]);
+        $bucket = env('AWS_BUCKET');
+        
+        // Set some defaults for form input fields
+        $formInputs = ['acl' => 'private', 'key'=>'pictures/${filename}'];
+        
+        // Construct an array of conditions for policy
+        $options = [
+            ['acl' => 'private'],
+            ['bucket' => $bucket],
+            ['starts-with', '$key', 'pictures/'],
+        ];
+        
+        // Optional: configure expiration time string
+        $expires = '+2 hours';
+        
+        $postObject = new \Aws\S3\PostObjectV4(
+            $client,
+            $bucket,
+            $formInputs,
+            $options,
+            $expires
+        );
+        
+        $formAttributes = $postObject->getFormAttributes();
+        $formInputs = $postObject->getFormInputs();
+        return view('pictures.create', compact('gallery','formInputs','formAttributes'));
     }
 
     /**
