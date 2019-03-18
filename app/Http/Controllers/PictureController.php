@@ -32,13 +32,13 @@ class PictureController extends Controller
         $bucket = env('AWS_BUCKET');
         
         // Set some defaults for form input fields
-        $formInputs = ['acl' => 'private', 'key'=>'pictures/${filename}'];
+        $formInputs = ['acl' => 'private', 'key'=>'dn/pictures/'. Str::random(40)];
         
         // Construct an array of conditions for policy
         $options = [
             ['acl' => 'private'],
             ['bucket' => $bucket],
-            ['starts-with', '$key', 'pictures/'],
+            ['starts-with', '$key', 'dn/pictures/'],
         ];
         
         // Optional: configure expiration time string
@@ -54,6 +54,7 @@ class PictureController extends Controller
         
         $formAttributes = $postObject->getFormAttributes();
         $formInputs = $postObject->getFormInputs();
+        
         return view('pictures.create', compact('gallery','formInputs','formAttributes'));
     }
 
@@ -67,7 +68,7 @@ class PictureController extends Controller
     {
         $picture = new Picture($request->all());
         $picture->gallery_id = $gallery->id;
-        $picture->path = $request->path->store('pictures', 's3');
+        //$picture->path = $request->path->store('pictures', 's3');
         $picture->save();
         return redirect()->route('galleries.show', $gallery);
     }

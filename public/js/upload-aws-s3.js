@@ -6,7 +6,7 @@ $(function() {
    var doneUploading = false;
  
    var uploadImage = function(attributes, inputs, file_input, callback) {
-       var file = file_input[0];
+       var file = file_input[0].files[0];
        if(file !== undefined && uploading === false && doneUploading === false) {
            uploading = true;
            var data = new FormData();
@@ -43,8 +43,9 @@ $(function() {
        uploadImage(attributes, inputs, file_input, function(){
            doneUploading = true;
            uploading = false;
+           var name = file_input.attr('name');
            file_input.remove();
-           //$form.append('<input type="hidden" value="'+ filename +'">');
+           $form.append('<input type="hidden" name="'+ name +'" value="'+ inputs['key'] +'">');
            $form.submit();
        });
  

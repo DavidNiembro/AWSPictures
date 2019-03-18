@@ -12,7 +12,7 @@ class Picture extends Model
      * @var array
      */
     protected $fillable = [
-        'title',
+        'title','path'
     ];
     public function gallery(){
         return $this->belongsTo('App\Gallery');

@@ -10,7 +10,8 @@
                 <div class="card-header">New Picture for gallery: {{$gallery->name}}</div>
 
                 <div class="card-body">
-                <form method="{{route('galleries.pictures.store') }}" action="POST" enctype="{{ $formAttributes['enctype'] }}" id="image-form" data-s3-attributes="{{ json_encode($formAttributes) }}" data-s3-inputs="{{ json_encode($formInputs) }}">
+                <form method="POST" action="{{ route('galleries.pictures.store', $gallery) }} " enctype="multipart/form-data" id="image-form" data-s3-attributes="{{ json_encode($formAttributes) }}" data-s3-inputs="{{ json_encode($formInputs) }}">
+                        @csrf
                         @foreach ($formInputs as $name => $value)
                             <input type="hidden" name="{{ $name }}" value="{{ $value }}" >
                         @endforeach                              
@@ -30,7 +31,7 @@
                             <label for="title" class="col-md-4 col-form-label text-md-right">File</label>
 
                             <div class="col-md-6">
-                                <input id="path" type="file" class="form-control{{ $errors->has('path') ? ' is-invalid' : '' }}" name="file" value="{{ old('path') }}" required autofocus>
+                                <input id="path" type="file" class="form-control{{ $errors->has('path') ? ' is-invalid' : '' }}" name="path" value="{{ old('path') }}" required autofocus>
                                 @if ($errors->has('path'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('path') }}</strong>
